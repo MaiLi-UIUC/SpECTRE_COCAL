@@ -44,6 +44,8 @@ struct FixConservativesAndComputePrims {
   using argument_tags = tmpl::list<
       ::Tags::VariableFixer<grmhd::ValenciaDivClean::FixConservatives>,
       hydro::Tags::GrmhdEquationOfState, gr::Tags::SpatialMetric<DataVector, 3>,
+      // hydro::Tags::SpatialVelocity<DataVector, 3>, //hydro spatial velocity
+      //  hydro::Tags::LorentzFactor<DataVector>,  //hydro lorentz factor
       gr::Tags::InverseSpatialMetric<DataVector, 3>,
       gr::Tags::SqrtDetSpatialMetric<DataVector>,
       grmhd::ValenciaDivClean::Tags::PrimitiveFromConservativeOptions>;
@@ -56,6 +58,9 @@ struct FixConservativesAndComputePrims {
       const grmhd::ValenciaDivClean::FixConservatives& fix_conservatives,
       const EquationsOfState::EquationOfState<true, 3>& eos,
       const tnsr::ii<DataVector, 3, Frame::Inertial>& spatial_metric,
+      // const tnsr::I<DataVector, 3, Frame::Inertial>& spatial_velocity,
+      // //indices down velocity const Scalar<DataVector>& lorentz_factor,
+      // //hydro lorentz factor
       const tnsr::II<DataVector, 3, Frame::Inertial>& inv_spatial_metric,
       const Scalar<DataVector>& sqrt_det_spatial_metric,
       const grmhd::ValenciaDivClean::PrimitiveFromConservativeOptions&

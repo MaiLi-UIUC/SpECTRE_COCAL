@@ -30,6 +30,10 @@ void FixConservativesAndComputePrims<OrderedListOfRecoverySchemes>::apply(
     const grmhd::ValenciaDivClean::FixConservatives& fix_conservatives,
     const EquationsOfState::EquationOfState<true, 3>& eos,
     const tnsr::ii<DataVector, 3, Frame::Inertial>& spatial_metric,
+    // const tnsr::I<DataVector, 3, Frame::Inertial>& spatial_velocity,
+    // //indices down velocity
+    //  const Scalar<DataVector> & lorentz_factor, //hydro lorentz factor
+
     const tnsr::II<DataVector, 3, Frame::Inertial>& inv_spatial_metric,
     const Scalar<DataVector>& sqrt_det_spatial_metric,
     const grmhd::ValenciaDivClean::PrimitiveFromConservativeOptions&
@@ -39,7 +43,8 @@ void FixConservativesAndComputePrims<OrderedListOfRecoverySchemes>::apply(
       make_not_null(&get<Tags::TildeYe>(*conserved_vars_ptr)),
       make_not_null(&get<Tags::TildeTau>(*conserved_vars_ptr)),
       make_not_null(&get<Tags::TildeS<Frame::Inertial>>(*conserved_vars_ptr)),
-      get<Tags::TildeB<Frame::Inertial>>(*conserved_vars_ptr), spatial_metric,
+      get<Tags::TildeB<Frame::Inertial>>(*conserved_vars_ptr),
+      spatial_metric, /*spatial_velocity*/
       inv_spatial_metric, sqrt_det_spatial_metric);
   grmhd::ValenciaDivClean::
       PrimitiveFromConservative<OrderedListOfRecoverySchemes, true>::apply(

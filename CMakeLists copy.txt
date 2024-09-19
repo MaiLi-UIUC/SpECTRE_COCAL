@@ -56,7 +56,6 @@ include(SpectreSetSiteName)
 # We need Python in the build system and throughout the code. Setting it up
 # early so we can rely on a consistent Python version in the build system.
 find_package(Python 3.8 REQUIRED)
-# find_package(COCAL REQUIRED)
 
 # Define the location of Python code in the build directory. Unit tests etc. can
 # add this location to their `PYTHONPATH`.
@@ -93,7 +92,6 @@ include(ProhibitInSourceBuild)
 include(SpectreSetupFlagsTarget)
 include(SetupFortran)
 include(SetupNinjaColors)
-include(SetupCocal)  # Add this line
 include(SetOutputDirectory)
 include(SpectreAddInterfaceLibraryHeaders)
 include(SpectreTargetHeaders)
@@ -197,8 +195,6 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(SYSTEM ${CMAKE_BINARY_DIR}/src)
 
 add_subdirectory(src)
-# add_subdirectory(src/PointwiseFunctions/AnalyticData/GrMhd/COCAL_reader)
-# target_link_libraries(EvolveGhValenciaDivCleanBns PRIVATE COCALReader)
 add_subdirectory(support)
 if(BUILD_TESTING)
   add_subdirectory(tests)

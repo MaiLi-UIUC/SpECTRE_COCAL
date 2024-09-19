@@ -24,7 +24,7 @@ namespace io {
  * \tparam Tags List of tags to load. The tags must correspond exactly to the
  * list of variables that the `spec_exporter` was configured with. This function
  * does not support interpolating only a subset of the variables. This is a
- * limitation of the `spec::Exporter`.
+ * limitation of the `spectre::Exporter`.
  * \tparam DataType `double` or `DataVector`.
  * \tparam CoordFrame The frame of the coordinates `x`. These coordinates are
  * always assumed to be in SpEC's "grid" frame.
@@ -34,17 +34,17 @@ namespace io {
  * in the same order.
  * \param x Interpolate to these coordinates. They are assumed to be in SpEC's
  * "grid" frame.
- * \param which_interpolator Index of the interpolator. See `spec::Exporter`
+ * \param which_interpolator Index of the interpolator. See `spectre::Exporter`
  * documentation for details.
  */
 template <typename Tags, typename DataType, typename CoordFrame>
 tuples::tagged_tuple_from_typelist<Tags> interpolate_from_spec(
-    const gsl::not_null<spec::Exporter*> spec_exporter,
+    const gsl::not_null<spectre::Exporter*> spec_exporter,
     const tnsr::I<DataType, 3, CoordFrame>& x,
     const size_t which_interpolator) {
-  // The `spec::Exporter` doesn't currently expose its `vars_to_interpolate`.
+  // The `spectre::Exporter` doesn't currently expose its `vars_to_interpolate`.
   // Once it does, we can assert the number of variables here.
-  // const auto& dataset_names = spec_exporter.vars_to_interpolate();
+  // const auto& dataset_names = spec_exporter->vars_to_interpolate();
   // ASSERT(tmpl::size<Tags>::value == dataset_names.size(),
   //        "Mismatch between number of tags and dataset names. The SpEC
   //        exporter " "was configured with " +

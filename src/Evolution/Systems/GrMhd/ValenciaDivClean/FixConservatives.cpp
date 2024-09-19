@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
+#include <iostream>
 #include <ostream>
 #include <pup.h>
 
@@ -15,6 +16,7 @@
 #include "DataStructures/Tensor/EagerMath/DotProduct.hpp"
 #include "DataStructures/Tensor/Tensor.hpp"
 #include "DataStructures/Variables.hpp"
+#include "Evolution/Systems/GrMhd/GhValenciaDivClean/Actions/SetInitialData.hpp"
 #include "NumericalAlgorithms/RootFinding/TOMS748.hpp"
 #include "Options/ParseError.hpp"
 #include "PointwiseFunctions/Hydro/MagneticFieldTreatment.hpp"
@@ -216,6 +218,9 @@ bool FixConservatives::operator()(
     const gsl::not_null<tnsr::i<DataVector, 3, Frame::Inertial>*> tilde_s,
     const tnsr::I<DataVector, 3, Frame::Inertial>& tilde_b,
     const tnsr::ii<DataVector, 3, Frame::Inertial>& spatial_metric,
+    // const tnsr::I<DataVector, 3, Frame::Inertial>& spatial_velocity,
+    // //spatial velocity
+    // const Scalar<DataVector> & lorentz_factor,
     const tnsr::II<DataVector, 3, Frame::Inertial>& inv_spatial_metric,
     const Scalar<DataVector>& sqrt_det_spatial_metric) const {
   bool needed_fixing = false;
@@ -430,6 +435,12 @@ bool FixConservatives::operator()(
         const SimdType f_at_lower = f_of_lorentz_factor(SimdType{0.0});
         const SimdType candidate_upper_bound =
             9.0 * (lower_bound_of_lorentz_factor_minus_one + 1.0);
+        // std::cout<< "candidate_upper_bound==" <<
+        // candidate_upper_bound<<std::endl;
+        //           upper_bound = 9.0 * (candidate_upper_bound + 1.0); //change
+        //           it to plus 1
+        //   std::cout<<"upper_bound=="<< upper_bound<<std::endl;
+
         // The if-based implementation is here as a reference since it's
         // likely easier to understand.
         //
@@ -453,6 +464,7 @@ bool FixConservatives::operator()(
           upper_bound = simd::select((f_at_candidate_upper_bound > 0.0) and
                                          not_upper_less_candidate_bound,
                                      candidate_upper_bound, upper_bound);
+          std::cout << "upper_bound==" << upper_bound << std::endl;
           f_at_upper = simd::select((f_at_candidate_upper_bound > 0.0) and
                                         not_upper_less_candidate_bound,
                                     f_at_candidate_upper_bound, f_at_upper);
@@ -492,6 +504,8 @@ bool FixConservatives::operator()(
             << exception.what());
           // clang-format on
         }
+        // excess_lorentz_factor = load(get(lorentz_factor)) - 1.; //just for
+        // testing
       }
 
       const auto rescaling_factor = simd::select(

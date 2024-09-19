@@ -11,6 +11,7 @@
 #include "Options/String.hpp"
 #include "PointwiseFunctions/GeneralRelativity/TagsDeclarations.hpp"  // IWYU pragma: keep
 #include "PointwiseFunctions/Hydro/MagneticFieldTreatment.hpp"
+#include "PointwiseFunctions/Hydro/Tags.hpp"
 #include "Utilities/Gsl.hpp"
 #include "Utilities/TMPL.hpp"
 
@@ -200,11 +201,13 @@ class FixConservatives {
                                  grmhd::ValenciaDivClean::Tags::TildeYe,
                                  grmhd::ValenciaDivClean::Tags::TildeTau,
                                  grmhd::ValenciaDivClean::Tags::TildeS<>>;
-  using argument_tags =
-      tmpl::list<grmhd::ValenciaDivClean::Tags::TildeB<>,
-                 gr::Tags::SpatialMetric<DataVector, 3>,
-                 gr::Tags::InverseSpatialMetric<DataVector, 3>,
-                 gr::Tags::SqrtDetSpatialMetric<DataVector>>;
+  using argument_tags = tmpl::list<
+      grmhd::ValenciaDivClean::Tags::TildeB<>,
+      gr::Tags::SpatialMetric<DataVector, 3>,
+      gr::Tags::InverseSpatialMetric<DataVector, 3>,
+      //   hydro::Tags::SpatialVelocity<DataVector, 3>, //hydro spatial velocity
+      // hydro::Tags::LorentzFactor<DataVector>, //hydro lorentz factor
+      gr::Tags::SqrtDetSpatialMetric<DataVector>>;
 
   /// Returns `true` if any variables were fixed.
   bool operator()(
@@ -214,6 +217,9 @@ class FixConservatives {
       gsl::not_null<tnsr::i<DataVector, 3, Frame::Inertial>*> tilde_s,
       const tnsr::I<DataVector, 3, Frame::Inertial>& tilde_b,
       const tnsr::ii<DataVector, 3, Frame::Inertial>& spatial_metric,
+      //   const tnsr::I<DataVector, 3, Frame::Inertial>& spatial_velocity,
+      //   //indices down velocity
+      //  const Scalar<DataVector> & lorentz_factor  ,
       const tnsr::II<DataVector, 3, Frame::Inertial>& inv_spatial_metric,
       const Scalar<DataVector>& sqrt_det_spatial_metric) const;
 
